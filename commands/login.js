@@ -1,38 +1,40 @@
-import inquirer from 'inquirer';
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import axios from 'axios';
+import chalk from 'chalk';
+import ora from 'ora';
+import { saveConfig, loadConfig } from '../utils/config.js'; // adapte selon ton projet
+import { askQuestion } from '../utils/readline.js'; // adapte selon ton projet
 
-const CONFIG_PATH = path.join(os.homedir(), '.dragon', 'config.json');
-
-export default async function login() {
-  const answers = await inquirer.prompt([
-    { name: 'email', message: 'Email :' },
-    { type: 'password', name: 'password', message: 'Mot de passe :' }
-  ]);
-
-  try {
-  const { data } = await axios.post(`${https://sarver-fullstack-4.onrender.com}/auth/login`, {
-    email,
-    password
-  });
-  // data contient la réponse JSON
-} catch (err) {
-  throw new Error(err.response?.data?.error || err.message);
-}
-
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || "Erreur de connexion");
+program
+  .command('login')
+  .description('Connectez-vous à la plateforme Dragon.')
+  .option('-s, --server <url>', 'Spécifier une URL de serveur personnalisée')
+  .action(async (options) => {
+    const config = await loadConfig();
+    if (config.bearerToken) {
+      console.log(chalk.yellow('Vous êtes déjà connecté. Utilisez `drn logout` pour vous déconnecter d\'abord.'));
+      return;
     }
 
-    // créer dossier ~/.dragon si inexistant
-    fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify({ token: data.token }, null, 2));
-    console.log("✅ Connexion réussie ! Jeton sauvegardé dans ~/.dragon/config.json");
-  } catch (err) {
-    console.error("❌ Échec de la connexion :", err.message);
-  }
-}
+    console.log(chalk.cyan('Veuillez entrer vos identifiants pour la plateforme Dragon.'));
+    const email = await askQuestion('Email: ');
+    const password = await askQuestion('Mot de passe: ');
+
+    const spinner = ora('Connexion en cours...').start();
+    try {
+        const API_BASE_URL = options.server || config.serverUrl || 'https://sarver-fullstack-4.onrender.com';
+
+        const { data } = await axios.post(`${API_BASE_URL}/auth/login`, {
+            email,
+            password
+        });
+
+        // On suppose ici que le login renvoie directement le token API final
+        await saveConfig({ bearerToken: data.api_token, serverUrl: API_BASE_URL });
+
+        spinner.succeed(chalk.green('Connexion réussie ! Votre clé d\'accès a été sauvegardée.'));
+        console.log(chalk.blue('Vous pouvez maintenant utiliser les commandes de la plateforme.'));
+
+    } catch (err) {
+        spinner.fail(chalk.red(`Erreur de connexion : ${err.response?.data?.error || err.message}`));
+    }
+  });
