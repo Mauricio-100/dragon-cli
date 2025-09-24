@@ -1,0 +1,9 @@
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+
+export function getToken() {
+  const file = path.join(os.homedir(), '.dragon', 'config.json');
+  if (!fs.existsSync(file)) throw new Error('Pas connecté. Lancez `drn login`.');
+  return JSON.parse(fs.readFileSync(file)).token;
+}
