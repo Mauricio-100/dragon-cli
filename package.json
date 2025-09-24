@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Votre assistant IA personnel pour le codage et l'automatisation.",
   "bin": {
-    "drn": "./index.js"
+    "drn": "./bin/cli.js"
   },
   "type": "module",
   "scripts": {
