@@ -5,6 +5,7 @@ import init from '../commands/init.js';
 import publish from '../commands/publish.js';
 import install from '../commands/install.js';
 import whoami from '../commands/whoami.js';
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const program = new Command();
 program
