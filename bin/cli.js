@@ -13,10 +13,10 @@ program
   .description('Dragon CLI – gestion des Dracopacks')
   .version('0.1.0');
 
-program
+rogram
   .command('init')
-  .description('Initialiser un nouveau projet Dragon')
-  .action(init);
+  .description('Initialise un nouveau Dracopack dans le dossier actuel.')
+  .action(initCommand);
 
 program
   .command('login')
