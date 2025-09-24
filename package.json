@@ -1,0 +1,32 @@
+{
+  "name": "dragon-cli",
+  "version": "1.0.0",
+  "description": "Votre assistant IA personnel pour le codage et l'automatisation.",
+  "bin": {
+    "drn": "./index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "cli",
+    "dragon",
+    "automation",
+    "ai",
+    "tools"
+  ],
+  "author": "Mauricio",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.0.0",
+    "execa": "^8.0.1",
+    "figlet": "^1.6.0",
+    "gradient-string": "^2.0.2",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1"
+  }
+}
+
