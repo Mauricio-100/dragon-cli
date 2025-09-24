@@ -12,14 +12,15 @@ export default async function login() {
   ]);
 
   try {
-    const res = await fetch("https://sarver-fullstack-4.onrender.com/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: answers.email,
-        password: answers.password
-      })
-    });
+  const { data } = await axios.post(`${https://sarver-fullstack-4.onrender.com}/auth/login`, {
+    email,
+    password
+  });
+  // data contient la réponse JSON
+} catch (err) {
+  throw new Error(err.response?.data?.error || err.message);
+}
+
 
     const data = await res.json();
 
