@@ -1,0 +1,12 @@
+import fs from 'fs';
+
+export default function init() {
+  const defaultConfig = {
+    name: 'mon-dracopack',
+    version: '1.0.0',
+    description: '',
+    main: 'index.js'
+  };
+  fs.writeFileSync('dragon.json', JSON.stringify(defaultConfig, null, 2));
+  console.log('✅ dragon.json créé !');
+}
