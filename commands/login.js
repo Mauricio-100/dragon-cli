@@ -1,5 +1,4 @@
 import inquirer from 'inquirer';
-import axios from 'axios';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -13,16 +12,26 @@ export default async function login() {
   ]);
 
   try {
-    const { data } = await axios.post('https://sarver-fullstack-4.onrender.com/auth/login', {
-      email: answers.email,
-      password: answers.password
+    const res = await fetch("https://sarver-fullstack-4.onrender.com/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: answers.email,
+        password: answers.password
+      })
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Erreur de connexion");
+    }
 
     // créer dossier ~/.dragon si inexistant
     fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
     fs.writeFileSync(CONFIG_PATH, JSON.stringify({ token: data.token }, null, 2));
-    console.log('✅ Connexion réussie ! Jeton sauvegardé dans ~/.dragon/config.json');
+    console.log("✅ Connexion réussie ! Jeton sauvegardé dans ~/.dragon/config.json");
   } catch (err) {
-    console.error('❌ Échec de la connexion :', err.response?.data?.error || err.message);
+    console.error("❌ Échec de la connexion :", err.message);
   }
 }
